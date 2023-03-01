@@ -10,7 +10,8 @@ namespace Workers
     {       
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=SQLSCECYPESRV;Initial catalog=InterfacesWHS;Integrated Security=true");
+            optionsBuilder.UseSqlServer(@"Data Source=DBINTERFWHSTEST;Initial catalog=InterfacesWHS;Integrated Security=true");
+            //optionsBuilder.UseSqlServer(@"Data Source=SQLSCECYPESRV;Initial catalog=InterfacesWHS;Integrated Security=true");
             //optionsBuilder.UseSqlServer(@"Data Source=ITGDESAOCSRV;Initial catalog=AccionesBBVA;Integrated Security=true");
         }
 

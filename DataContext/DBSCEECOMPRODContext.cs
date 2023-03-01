@@ -10,7 +10,8 @@ namespace Workers.DataContext
     {
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseSqlServer(@"Data Source=DBSCEECOMPROD;Initial catalog=LPNFD;Integrated Security=true");
+            optionsBuilder.UseSqlServer(@"Data Source=DBSCEFARMATEST;Initial catalog=LPNFD;Integrated Security=true");
+            //optionsBuilder.UseSqlServer(@"Data Source=SQLSCECYPESRV;Initial catalog=LPNFD;Integrated Security=true");
             //optionsBuilder.UseSqlServer(@"Data Source=ITGDESAOCSRV;Initial catalog=AccionesBBVA;Integrated Security=true");
         }
 
