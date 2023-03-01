@@ -39,7 +39,7 @@ namespace Workers
                 {
                     _logger.LogInformation("ANTES DE COMPARAR: {time}", DateTimeOffset.Now);
                     CompareAsync();
-                    await Task.Delay(60000, stoppingToken);
+                    await Task.Delay(300000, stoppingToken);
                 }
                 catch (Exception ex)
                 {
