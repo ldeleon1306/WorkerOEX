@@ -24,7 +24,8 @@ namespace Workers.Models
                               RazonFalla = p.RazonFalla,
                               Almacen = p.Almacen,
                               OrdenExterna1 = p.OrdenExterna1
-                          };   
+                          };
+            Console.WriteLine(estados.Count());
             try
             {
                 a = estados.Count();
