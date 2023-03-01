@@ -13,7 +13,7 @@ namespace Workers.Models
             Wap_IngresosPedidosContext db = new Wap_IngresosPedidosContext();
             WAP_INGRESOPEDIDOS wp = new WAP_INGRESOPEDIDOS();
             var idlist = new int[] { 2, 3};
-
+            Console.WriteLine("antes  from p in db.WAP_INGRESOPEDIDOS");
             var estados = from p in db.WAP_INGRESOPEDIDOS
                           where p.IdTransacción == idtransaccion && idlist.Contains(p.Estado)
                           select new WAP_INGRESOPEDIDOS()
@@ -25,6 +25,7 @@ namespace Workers.Models
                               Almacen = p.Almacen,
                               OrdenExterna1 = p.OrdenExterna1
                           };
+            Console.WriteLine("despues  from p in db.WAP_INGRESOPEDIDOS");
             Console.WriteLine(estados.Count());
             try
             {
