@@ -20,6 +20,7 @@ namespace Workers.Models
                 var client = new MongoClient("mongodb://10.20.2.46:27017?connect=replicaSet");
                 Console.WriteLine("conecto a mongo 21");
                 Console.WriteLine("entra a mongo 22");
+                Console.WriteLine("entra a mongo 22a");
                 List<string> NombrebaseDatos = client.ListDatabaseNames().ToList();
                 Console.WriteLine("entra a mongo 23");
                 var database = client.GetDatabase("APIAlmacenes");
