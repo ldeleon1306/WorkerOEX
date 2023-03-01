@@ -73,11 +73,10 @@ namespace Workers
                             using (Wap_IngresosPedidosContext db = new Wap_IngresosPedidosContext())
                             {
                                 var encontroWap = Wap.GetWap(Convert.ToString(listpedmongo.idtransaccion));
-
+                                Console.WriteLine("---------------WAP--------------------");
                                 if (encontroWap.Item1>0) 
                                 {
                                     wp.OrdenExterna1 = encontroWap.Item2; wp.Almacen = encontroWap.Item3; wp.RazonFalla = encontroWap.Item4; wp.Estado = encontroWap.Item5; 
-                                    Console.WriteLine("---------------WAP--------------------");
                                     Console.WriteLine("OrdenExterna1: " + wp.OrdenExterna1 + "  Almacen: " + wp.Almacen + "  Estado: " + wp.Estado + "  RazonFalla: " + wp.RazonFalla);                                                     
 
                                
