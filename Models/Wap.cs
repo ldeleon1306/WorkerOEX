@@ -24,8 +24,7 @@ namespace Workers.Models
                               RazonFalla = p.RazonFalla,
                               Almacen = p.Almacen,
                               OrdenExterna1 = p.OrdenExterna1
-                          };
-            Console.WriteLine("coencto linq");
+                          };   
             try
             {
                 a = estados.Count();
@@ -38,10 +37,11 @@ namespace Workers.Models
                         if (item.Estado == 2) { break; };//corto el foreach si encuentro el estado aceptado
                         //if(item.Estado == 3) { }
                     }
+                    Console.WriteLine("wap 40");
                 }
                 else
                 {
-                    //agregar lista reprocesar back
+                    Console.WriteLine("else wap 43");//agregar lista reprocesar back
                 }               
             }
             catch (Exception ex)
