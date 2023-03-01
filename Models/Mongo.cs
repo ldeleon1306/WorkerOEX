@@ -18,6 +18,7 @@ namespace Workers.Models
             {
                 Console.WriteLine("entra a mongo 19");
                 var client = new MongoClient("mongodb://10.20.7.44:27017");
+                //var client = new MongoClient("mongodb://10.20.2.46:27017"); proddddddddd
                 Console.WriteLine("conecto a mongo 21");
                 Console.WriteLine("entra a mongo 22");
                 List<string> NombrebaseDatos = client.ListDatabaseNames().ToList();
