@@ -72,6 +72,7 @@ namespace Workers
             /////////WAP
                             using (Wap_IngresosPedidosContext db = new Wap_IngresosPedidosContext())
                             {
+                                Console.WriteLine("---------------antes Wap.GetWap--------------------");
                                 var encontroWap = Wap.GetWap(Convert.ToString(listpedmongo.idtransaccion));
                                 Console.WriteLine("---------------WAP--------------------");
                                 if (encontroWap.Item1>0) 
