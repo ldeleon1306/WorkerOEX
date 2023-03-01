@@ -25,6 +25,7 @@ namespace Workers.Models
                               Almacen = p.Almacen,
                               OrdenExterna1 = p.OrdenExterna1
                           };
+            Console.WriteLine("coencto linq");
             try
             {
                 a = estados.Count();
@@ -45,7 +46,7 @@ namespace Workers.Models
             }
             catch (Exception ex)
             {
-
+                Console.WriteLine("ex 48 wap");
                 throw ex;
             }
 
