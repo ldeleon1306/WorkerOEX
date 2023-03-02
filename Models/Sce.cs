@@ -9,11 +9,10 @@ namespace Workers.Models
     {
         internal static int conectarSce(string WpOrdenExterna1, string WpAlmacen)
         {
-            WpAlmacen = "wmwhse4";
             string sql = "select EXTERNORDERKEY,WHSEID,STATUS FROM [LPNFD].[" + WpAlmacen + "].[ORDERS] WHERE EXTERNORDERKEY = '" + WpOrdenExterna1 + "'";
             int count = 0;
             //using (SqlConnection connection = new SqlConnection(@"Data Source=SQLSCECYPESRV;Initial catalog=LPNFD;Integrated Security=true"))
-            using (SqlConnection connection = new SqlConnection(@"Data Source=DBSCEFARMATEST;Initial catalog=LPNFD;Trusted_Connection=True;Integrated Security=true"))
+            using (SqlConnection connection = new SqlConnection(@"Data Source=DBSCEFARMATEST;Initial catalog=LPNFD;Integrated Security=true"))
             {
                 connection.Open();
                
