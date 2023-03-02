@@ -58,10 +58,11 @@ namespace Workers.Models
                 Console.WriteLine("ex 48 wap");
             }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
+                Console.WriteLine("ex 48 wap");
+                Console.WriteLine(ex.Message);
+                //throw;
             }
             return (a, wp.OrdenExterna1, wp.Almacen, wp.RazonFalla, wp.Estado);
 
