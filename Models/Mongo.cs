@@ -5,42 +5,146 @@ using System.Linq;
 using MongoDB.Driver;
 using MongoDB.Bson;
 using System.Threading.Tasks;
+using MongoDB.Driver.Linq;
+using static Workers.Models.CollectionMongo;
+using Microsoft.AspNetCore.Mvc.Rendering;
 
 namespace Workers.Models
 {
     public class Mongo
     {     
 
-        internal static List<CollectionMongo> GetMongoCollection()
+        internal static async Task<List<CollectionMongo>> GetMongoCollectionAsync()
         {         
             List<CollectionMongo> listRange = new List<CollectionMongo>();
             try
             {
-                Console.WriteLine("entra a mongo 19");
-                var client = new MongoClient("mongodb://10.20.7.44:27017");
-                //var client = new MongoClient("mongodb://10.20.2.46:27017"); proddddddddd
-                Console.WriteLine("conecto a mongo 21");
-                Console.WriteLine("entra a mongo 22");
+                //var client = new MongoClient("mongodb://10.20.7.44:27017");
+                var client = new MongoClient("mongodb://10.20.2.46:27017"); //proddddddddd
                 List<string> NombrebaseDatos = client.ListDatabaseNames().ToList();
-                Console.WriteLine("entra a mongo 23");
                 var database = client.GetDatabase("APIAlmacenes");
-                Console.WriteLine("entra a mongo 24");
 
-                var collection = database.GetCollection<BsonDocument>("TransaccionesPedidos");
+                var collection = database.GetCollection<CollectionMongo>("TransaccionesPedidos");
 
-                var list = collection.Find(new BsonDocument())
-                     .Limit(2) //retrive only two documents
-                    .ToList();
-        
-                foreach (var docs in list)
+
+
+                //foreach (var item in resultssss)
+                //{
+
+                //}
+                var Request = database.GetCollection<CollectionMongo.Request>("TransaccionesPedidos");
+                var respone = database.GetCollection<CollectionMongo.Response>("Id.Pedido.propietario");
+                var root = database.GetCollection<CollectionMongo.Root>("TransaccionesPedidos");
+                var resultsss = Request.Find(x => x.pedido.remito == "").FirstOrDefault();
+
+
+                //    CollectionMongo results =
+                //from movie in Request.AsQueryable()
+                //where movie.almacen.Contains("Ryan Reynolds")
+                //from cast in Pedido.AsQueryable()
+                //where cast.propietario == "NARANJA"
+                //group movie by cast into g
+                //select new { Cast = g.Key, Sum = g.Sum(x => x.pedido) };
+
+
+
+                //var q = from channel in Request.AsQueryable()
+                //        from episode in channel.
+                //        .Where(x => x.propietario == "NARANJA")
+                //        select new requesta()
+                //        {
+                //            propietario = episode.propietario
+                //        };
+
+                //var min = new DateTime(2023, 01, 01, 22, 0, 0);
+                //var max = (new DateTime(2023, 01, 20, 23, 0, 0));
+
+                //[BsonDateTimeOptions(Kind = DateTimeKind.Local)]
+                string dateTime = "2023-03-06T18:04:56.596+00:00";
+                DateTime dt = Convert.ToDateTime(dateTime);
+                //string dateTimes = "2023-02-01";
+                //DateTime dts = Convert.ToDateTime(dateTimes);
+                string nuevo = DateTime.Now.ToString("yyyy-MM-dd hh:mm:ss tt");
+                DateTime s = Convert.ToDateTime(nuevo);
+
+                //var t= root.AsQueryable().Where(x => x.fechacreacion > dt && x.estado != "PENDIENTE")
+                //    .GroupBy(a => a.request.pedido.remito).Select(a => a.First());
+
+
+                //.Select(x => x.request.pedido.remito).Distinct().Select(x => new SelectListItem { Text = x });
+
+
+
+                var tweetsFiltrados = (from c in root.AsQueryable()
+                                       where c.fechacreacion > dt && c.estado != "PENDIENTE"
+                                       select new
+                                       {
+                                           remito = c.request.pedido.remito,
+                                           estado = c.estado,
+                                           propietario = c.request.pedido.propietario,
+                                           razon = c.razon,
+                                            fecha = c.fechacreacion
+
+                                       })
+                                        .Distinct()
+        .ToList();
+                //int a = tweetsFiltrados.Count();
+                foreach (var item in tweetsFiltrados)
                 {
-                    //_logger.LogInformation(docs.ToString());
-                    //Console.WriteLine("Idtransaccion: " + docs["response"]["idtransaccion"] + "  Estado: " + docs["estado"]);
-
-                    listRange.Add(new CollectionMongo() { idtransaccion = (int)Convert.ToInt64(docs["response"]["idtransaccion"]), estado = (string)docs["estado"] });
-                    //_logger.LogInformation(docs.ToString());
-                    //Console.WriteLine(docs);
+                    //Console.WriteLine("{0},{1},{2},{3},{4}", item.remito, item.propietario, item.estado, item.fecha, item.razon);
+                    listRange.Add(new CollectionMongo() { remito = Convert.ToString(item.remito), propietario = Convert.ToString(item.propietario), estado = Convert.ToString(item.estado), razon = Convert.ToString(item.razon), fechacreacion = Convert.ToDateTime(item.fecha) });
                 }
+
+                //var builder = Builders<CollectionMongo>.Filter;
+             
+                //var pro = IMongoCollection<Request>(collection);
+                //where pro.fechacreacion > dt && pro.fechacreacion < dts
+                //var filter = builder.Eq("request.pedido.propietario", "NARANJA");
+                //filter &= builder.Gt("fechacreacion", "2023-01-01T00:00:00.000+00:00");
+                //var filter = builder.Gt("fechacreacion", "2023-03-06T00:00:00.000+00:00");
+                //filter &=builder.Eq("request.pedido.propietario", "NARANJA"); 
+           
+
+
+                //find the ID of the Godfather movie...
+
+               // dynamic theGodfather = await collection.FindAsync(filter);
+
+               // var options = new FindOptions<BsonDocument>
+               // {
+               //     // Get 100 docs at a time
+               //     BatchSize = 200
+               // };
+               // int count = 0;
+               // using (var cursor = await collection.FindAsync<BsonDocument>(filter))
+
+               // {
+
+               //     while (await cursor.MoveNextAsync())
+
+               //     {
+
+               //         var batch = cursor.Current;
+                    
+               //         foreach (var document in batch.AsEnumerable())
+
+               //         {
+               //             var idtransaccion = (document[2][0]);
+               //             var propietario = (document[1][4][0]);
+               //             var estado = (document[3]);
+               //             var razon = (document[4]);
+               //             var fecha = (document[5]);
+               //             listRange.Add(new CollectionMongo() { idtransaccion =Convert.ToInt32(idtransaccion), propietario = Convert.ToString(propietario), estado =Convert.ToString(estado), razon = Convert.ToString(razon), fechacreacion = Convert.ToDateTime(fecha) });
+               //             Console.WriteLine("{0},{1},{2},{3},{4}", idtransaccion,propietario, estado,fecha,razon);
+
+               //             count++;
+
+               //         }
+
+               //     }
+
+               // }
+          
             }
             catch (Exception ex)
             {
@@ -50,6 +154,11 @@ namespace Workers.Models
             }            
 
             return listRange;
+        }
+
+        private static object IMongoCollection<T>(IMongoCollection<CollectionMongo> collection)
+        {
+            throw new NotImplementedException();
         }
 
         //internal static List<string> GetMongoCollection()
