@@ -39,7 +39,7 @@ namespace Workers
                 {
                     _logger.LogInformation("ANTES DE COMPARAR: {time}", DateTimeOffset.Now);
                     CompareAsync();
-                    await Task.Delay(300000, stoppingToken);
+                    await Task.Delay(3000000, stoppingToken);
                 }
                 catch (Exception ex)
                 {
@@ -57,9 +57,10 @@ namespace Workers
                 try
                 {
              /////////MONGO
-                    List<CollectionMongo> ListPedMongo = Mongo.GetMongoCollection();
+                    List<CollectionMongo> ListPedMongo = await Mongo.GetMongoCollectionAsync();
                     WAP_INGRESOPEDIDOS wp = new WAP_INGRESOPEDIDOS();
                     List<WAP_INGRESOPEDIDOS> listWapReprocesar = new List<WAP_INGRESOPEDIDOS>();
+                    List<CollectionMongo> listpApiProcesar = new List<CollectionMongo>();
                     try
                     {
                         foreach (var listpedmongo in ListPedMongo)  
@@ -67,18 +68,17 @@ namespace Workers
                             Console.WriteLine("");
                             Console.WriteLine("----------------------------------------------------------------------------------------------------------------------------------------------------------");
                             Console.WriteLine("---------------MONGO--------------------");
-                            Console.WriteLine("Idtransaccion: " + listpedmongo.idtransaccion + "  Estado: " + listpedmongo.estado);
+                            Console.WriteLine("Idtransaccion: " + listpedmongo.remito + "  Estado: " + listpedmongo.estado + "  Fecha " + listpedmongo.fechacreacion +"  Razon " + listpedmongo.razon);
             /////////FIN MONGO
             /////////WAP
                             using (Wap_IngresosPedidosContext db = new Wap_IngresosPedidosContext())
                             {
-                                Console.WriteLine("---------------antes Wap.GetWap--------------------");
-                                var encontroWap = Wap.GetWap(Convert.ToString(listpedmongo.idtransaccion));
+                                var encontroWap = Wap.GetWap(Convert.ToString(listpedmongo.idtransaccion));//PONER ALMACEN
                                 Console.WriteLine("---------------WAP--------------------");
                                 if (encontroWap.Item1>0) 
                                 {
                                     wp.OrdenExterna1 = encontroWap.Item2; wp.Almacen = encontroWap.Item3; wp.RazonFalla = encontroWap.Item4; wp.Estado = encontroWap.Item5; 
-                                    Console.WriteLine("OrdenExterna1: " + wp.OrdenExterna1 + "  Almacen: " + wp.Almacen + "  Estado: " + wp.Estado + "  RazonFalla: " + wp.RazonFalla);                                                     
+                                    Console.WriteLine("OrdenExterna: " + wp.OrdenExterna1 + "  Almacen: " + wp.Almacen + "  Estado: " + wp.Estado + "  RazonFalla: " + wp.RazonFalla);                                                     
 
                                
             /////////FIN WAP
@@ -94,19 +94,38 @@ namespace Workers
 
                                 else
                                 {
+                                    listpApiProcesar.Add(new CollectionMongo() { idtransaccion = listpedmongo.idtransaccion,estado= listpedmongo.estado, razon = listpedmongo.razon });
                                     //reprocesar API o CLIENTE
                                 }
                             }
                         }
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("---------------Reprocesar API--------------------");
                         if (File.Exists("output.txt")) File.Delete("output.txt");
-                        using StreamWriter streamwriter = File.AppendText("output.txt");
-                        foreach (var line in listWapReprocesar)
-                        {                         
-                           
-                            streamwriter.WriteLine(line.OrdenExterna1);
-                            Console.WriteLine(line.OrdenExterna1);
+                        using StreamWriter streamwriterAPI = File.AppendText("output.txt");
+                        foreach (var line in listpApiProcesar)
+                        {
+
+                            streamwriterAPI.WriteLine( line.estado, line.idtransaccion);
+                            Console.WriteLine(line.idtransaccion + " " + line.estado + " " + line.razon);
                         }
-                        streamwriter.Close();
+                        streamwriterAPI.Close();
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("--------------------------------------------------");
+                        Console.WriteLine("---------------Reprocesar Back--------------------");
+                        if (File.Exists("output.txt")) File.Delete("output.txt");
+                        using StreamWriter streamwriterBack = File.AppendText("output.txt");
+                        foreach (var line in listWapReprocesar)
+                        {
+
+                            streamwriterBack.WriteLine(line.OrdenExterna1,line.Almacen,line.Estado,line.RazonFalla);                         
+                           Console.WriteLine("OrdenExterna: " +line.OrdenExterna1 + "  Almacen: " + line.Almacen + "  Estado: " + line.Estado + "  RazonFalla: " + line.RazonFalla);
+                        }
+                        streamwriterBack.Close();
                         //foreach (var item in listWapReprocesar)
                         //{
                         //    Console.WriteLine(item.OrdenExterna1,item.Almacen,item.Estado,item.RazonFalla);
